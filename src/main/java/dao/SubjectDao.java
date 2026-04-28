@@ -133,4 +133,24 @@ public class SubjectDao extends Dao {
 		
 		return count > 0; // 1行以上書き換えに成功したらtrueを返す
 	}
+	/**
+	 * 指定された科目をデータベースから削除するメソッド
+	 */
+	public boolean delete(Subject subject) throws Exception {
+		Connection connection = getConnection();
+		
+		// 「この科目コードと学校コードのデータを削除して！」という命令
+		String sql = "delete from subject where subject_cd = ? and school_cd = ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		
+		statement.setString(1, subject.getCd());
+		statement.setString(2, subject.getSchool().getSchoolCd());
+		
+		int count = statement.executeUpdate();
+		
+		statement.close();
+		connection.close();
+		
+		return count > 0; // 1行以上削除されたらtrueを返す
+	}
 }
