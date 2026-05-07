@@ -2,11 +2,13 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <c:import url="/common/base.jsp">
-	<c:param name="title">科目変更 - 得点管理システム</c:param>
+	<c:param name="title">
+		得点管理システム
+	</c:param>
 	<c:param name="content">
 		
 		<div class="container mt-4">
-			<h3 class="mb-4">科目変更</h3>
+			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">科目情報変更</h2>
 			
 			<form action="SubjectUpdateExecute.action" method="post">
 				<div class="mb-3">
@@ -15,6 +17,7 @@
 					<p class="form-control-plaintext">${subject.cd}</p>
 					<%-- ただし、裏側にはコードを送る必要があるので hidden（隠しパーツ）でこっそり忍ばせる --%>
 					<input type="hidden" name="cd" value="${subject.cd}">
+					<div class="mt-2 text-warning">${errors.get("1") }</div>
 				</div>
 				<div class="mb-4">
 					<label class="form-label">科目名</label>
@@ -22,8 +25,8 @@
 					<input type="text" name="name" class="form-control" maxlength="20" value="${subject.name}" required autofocus>
 				</div>
 				
-				<button type="submit" class="btn btn-primary">変更して次へ</button>
-				<a href="SubjectList.action" class="btn btn-secondary ms-2">戻る</a>
+				<button type="submit" class="btn btn-primary">変更</button><br><br>
+				<a href="SubjectList.action">戻る</a>
 			</form>
 			
 		</div>

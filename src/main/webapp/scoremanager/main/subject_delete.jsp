@@ -2,36 +2,23 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <c:import url="/common/base.jsp">
-	<c:param name="title">科目削除確認 - 得点管理システム</c:param>
+	<c:param name="title">
+		得点管理システム
+	</c:param>
 	<c:param name="content">
-		
 		<div class="container mt-4">
-			<h3 class="mb-4 text-danger">科目削除確認</h3>
+			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">科目情報削除</h2>
 			
-			<div class="alert alert-warning">
-				以下の科目を削除しますか？<br>
-				<strong>※この操作は元に戻せません。</strong>
-			</div>
+			<p>「${subject.name}（${subject.cd}）」を削除してもよろしいでしょうか？</p>
 			
 			<form action="SubjectDeleteExecute.action" method="post">
-				<%-- 削除実行係に科目コードを伝えるための隠しパーツ --%>
 				<input type="hidden" name="cd" value="${subject.cd}">
-				
-				<table class="table table-bordered mb-4">
-					<tr>
-						<th class="table-light" style="width: 200px;">科目コード</th>
-						<td>${subject.cd}</td>
-					</tr>
-					<tr>
-						<th class="table-light">科目名</th>
-						<td>${subject.name}</td>
-					</tr>
-				</table>
-				
-				<button type="submit" class="btn btn-danger">削除する</button>
-				<a href="SubjectList.action" class="btn btn-secondary ms-2">キャンセルして戻る</a>
+				<button type="submit" class="btn btn-danger">削除</button>
 			</form>
-			
+			<br>
+			<br>
+			<br>
+			<a href="SubjectList.action">戻る</a>
 		</div>
 		
 	</c:param>
