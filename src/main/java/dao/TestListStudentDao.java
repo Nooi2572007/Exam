@@ -51,13 +51,14 @@ public class TestListStudentDao extends Dao {
 		// リザルトセット
 		ResultSet resultSet = null;
 		// SQL文の条件
+		String join = " join subject on test.subject_cd = subject.subject_cd";
 	    String condition = " where student_no = ?";
 		// SQL文のソート
 		String order = " order by subject_cd asc";
 		
 		try {
 			// プリペアードステートメントにSQL文をセット
-			statement = connection.prepareStatement(baseSql + condition + order);
+			statement = connection.prepareStatement(baseSql + join +  condition + order);
 			// プリペアードステートメントに学校コードをバインド
 			statement.setString(1, student.getStudentNo());
 			// プリペアードステートメントを実行
