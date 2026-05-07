@@ -6,16 +6,19 @@
 	<c:param name="content">
 		
 		<div class="container mt-4">
-			<h3 class="mb-4">科目管理</h3>
+			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">科目情報</h2>
+			<div class="my-2 text-end px-4">
+				<a href="SubjectCreate.action">新規登録</a>
+			</div>
 			
 			<div class="table-responsive">
-				<table class="table table-hover table-bordered table-striped">
-					<thead class="table-light">
+				<table class="table">
+					<thead>
 						<tr>
 							<th scope="col">科目コード</th>
 							<th scope="col">科目名</th>
-							<th scope="col" class="text-center">変更</th>
-							<th scope="col" class="text-center">削除</th>
+							<th></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -35,12 +38,6 @@
 					</tbody>
 				</table>
 			</div>
-			
-			<div class="mt-3">
-				<a href="SubjectCreate.action">新しい科目を登録する</a>
-			</div>
-			
 		</div>
-		
 	</c:param>
 </c:import>
