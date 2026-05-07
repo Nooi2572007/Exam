@@ -40,7 +40,7 @@
 								</select>
 							</div>
 							<div class="col-md-2">
-								<button type="submit" name="search_subject" class="btn btn-secondary w-100">検索</button>
+								<button type="submit" class="btn btn-secondary w-100">検索</button>
 							</div>
 						</div>
 
@@ -52,23 +52,25 @@
 								<input type="text" name="student_no" class="form-control" placeholder="学生番号を入力してください" value="${param.student_no}">
 							</div>
 							<div class="col-md-2">
-								<button type="submit" name="search_student" class="btn btn-secondary w-100">検索</button>
+								<button type="submit" class="btn btn-secondary w-100">検索</button>
 							</div>
 						</div>
 					</form>
 				</div>
 			</div>
 
-			<c:if test="${not empty param.student_no}">
-				<div class="mb-3">
-					<%-- 検索した場合は、データが有っても無くても名前を表示する --%>
-					<div>氏名：${student_name}（${target_no}）</div>
-				</div>
+			<%-- 検索結果の表示エリア --%>
+			<c:if test="${not empty scores or not empty param.student_no}">
+				
+				<%-- 学籍番号検索時の氏名表示 --%>
+				<c:if test="${not empty param.student_no}">
+					<div class="mb-3 fw-bold">氏名：${student_name}（${target_no}）</div>
+				</c:if>
 				
 				<%-- ① 成績データがある場合：テーブルを表示 --%>
 				<c:if test="${not empty scores}">
 					<table class="table table-hover table-bordered border-secondary">
-						<thead class="table-light">
+						<thead class="table-light text-center">
 							<tr>
 								<th>科目名</th>
 								<th>科目コード</th>
@@ -79,22 +81,24 @@
 						<tbody>
 							<c:forEach var="score" items="${scores}">
 								<tr>
-									<td class="text-muted">（DAO完成待ち）</td>
-									<td>${score.subjectCd}</td>
-									<td>${score.no}</td>
-									<td>${score.point}</td>
+									<%-- 米倉さんのBeanから本物の科目名を表示 --%>
+									<td>${score.subjectName}</td>
+									<td class="text-center">${score.subjectCd}</td>
+									<td class="text-center">${score.no}</td>
+									<td class="text-center">${score.point}</td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
 				</c:if>
 				
-				<%-- ② 成績データがない場合：設計書通りのエラーメッセージを表示 --%>
+				<%-- ② 成績データがない場合のエラーメッセージ --%>
 				<c:if test="${empty scores}">
-					<div>成績情報が存在しませんでした</div>
+					<div class="alert alert-warning">成績情報が存在しませんでした</div>
 				</c:if>
+				
 			</c:if>
 
-		</div> <%-- containerの閉じタグ --%>
-	</c:param> <%-- ★これを忘れていました！「content」パラメータの終了 --%>
-</c:import> <%-- base.jspの読み込み終了 --%>
+		</div> <%-- container終了 --%>
+	</c:param> <%-- content終了 --%>
+</c:import> <%-- base.jsp終了 --%>
