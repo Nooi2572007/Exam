@@ -94,3 +94,7 @@
 					<div>成績情報が存在しませんでした</div>
 				</c:if>
 			</c:if>
+
+		</div> <%-- containerの閉じタグ --%>
+	</c:param> <%-- ★これを忘れていました！「content」パラメータの終了 --%>
+</c:import> <%-- base.jspの読み込み終了 --%>
