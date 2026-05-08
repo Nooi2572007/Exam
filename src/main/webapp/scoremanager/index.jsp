@@ -1,1 +1,1 @@
-<% response.sendRedirect("scoremanager/Login.action"); %>
+<% response.sendRedirect("scoremanager/main/Login.action"); %>
