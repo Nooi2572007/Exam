@@ -1,13 +1,21 @@
 package scoremanager.main;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import bean.School;
 import bean.Student;
 import bean.Subject;
 import bean.Teacher;
+import bean.TestListStudent;
+import bean.TestListSubject;
+import dao.StudentDao;
 import dao.SubjectDao;
 import dao.TestDao;
-import dao.TestListStudentDao; // 米倉さんの新しいDAO
+import dao.TestListStudentDao;
+import dao.TestListSubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,63 +23,78 @@ import tool.Action;
 
 public class TestListAction extends Action {
 
-	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		HttpSession session = request.getSession();
-		Teacher teacher = (Teacher) session.getAttribute("user");
+    @Override
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+        HttpSession session = req.getSession();
+        Teacher teacher = (Teacher) session.getAttribute("user");
+        School school = teacher.getSchool();
 
-		// DAOのインスタンス化
-		SubjectDao sDao = new SubjectDao();
-		TestDao tDao = new TestDao();
-		TestListStudentDao sTestDao = new TestListStudentDao();
+        TestDao tDao = new TestDao();
+        SubjectDao sDao = new SubjectDao();
+        StudentDao stDao = new StudentDao();
+        TestListSubjectDao tlsSubDao = new TestListSubjectDao();
+        TestListStudentDao tlsStdDao = new TestListStudentDao();
 
-		// 1. プルダウン用のデータを取得
-		List<Subject> subjects = sDao.filter(teacher.getSchool());
-		List<Integer> entYearList = tDao.filterEntYear(teacher.getSchool());
-		List<String> classNumList = tDao.filterClassNum(teacher.getSchool());
+        // ドロップダウンリスト用データ
+        List<Integer> entYearSet = tDao.filterEntYear(school);
+        List<String> classNumSet = tDao.filterClassNum(school);
+        List<Subject> subjects = sDao.filter(school);
 
-		request.setAttribute("subjects", subjects);
-		request.setAttribute("ent_year_list", entYearList);
-		request.setAttribute("class_num_list", classNumList);
+        // パラメータ取得
+        String f1Str = req.getParameter("f1"); // 入学年度
+        String f2    = req.getParameter("f2"); // クラス
+        String f3    = req.getParameter("f3"); // 科目コード
+        String f5    = req.getParameter("f5"); // 学生番号
 
-		// 2. 検索パラメータの取得
-		String entYearStr = request.getParameter("ent_year"); // JSPのname属性に合わせる
-		String classNum = request.getParameter("class_num");
-		String subjectCd = request.getParameter("subject_cd");
-		String studentNo = request.getParameter("student_no");
+        if (f1Str != null && f2 != null && f3 != null && !f3.equals("0")) {
+            // 【科目検索】
+            int f1 = Integer.parseInt(f1Str);
+            Subject subject = sDao.get(f3, school);
 
-		// 異なる型のリストを格納できるよう、ワイルドカード（?）を使用
-		List<?> scores = null;
+            // DAOは行ごとに別オブジェクトを作るため、
+            // 同じ学生番号のオブジェクトをLinkedHashMapでマージする
+            List<TestListSubject> rawList = tlsSubDao.filter(f1, f2, subject, school);
+            Map<String, TestListSubject> mergeMap = new LinkedHashMap<>();
+            if (rawList != null) {
+                for (TestListSubject ts : rawList) {
+                    String key = ts.getStudentNo();
+                    if (mergeMap.containsKey(key)) {
+                        // 同じ学生の2件目以降 → pointsだけ追加
+                        mergeMap.get(key).getPoints().putAll(ts.getPoints());
+                    } else {
+                        // 初出の学生 → そのままMapに登録
+                        mergeMap.put(key, ts);
+                    }
+                }
+            }
+            List<TestListSubject> subjectTests = new ArrayList<>(mergeMap.values());
 
-		// 3. 検索ロジックの実行
-		
-		// 【パターンA】科目情報で検索された場合
-		if (entYearStr != null && !entYearStr.equals("0") && subjectCd != null && !subjectCd.equals("0")) {
-			int entYear = Integer.parseInt(entYearStr);
-			Subject subject = sDao.get(subjectCd, teacher.getSchool());
-			
-			// 回数(no)はJSP側で指定がない場合、一旦1回目を表示
-			int num = 1; 
-			
-			scores = tDao.filter(entYear, classNum, subject, num, teacher.getSchool());
-			
-		} 
-		// 【パターンB】学生番号で検索された場合
-		else if (studentNo != null && !studentNo.isEmpty()) {
-			// 学生情報を準備
-			Student student = new Student();
-			student.setStudentNo(studentNo);
-			student.setSchool(teacher.getSchool());
-			
-			// 米倉さんの新しいDAOで成績リストを取得
-			scores = sTestDao.filter(student);
-			
-			request.setAttribute("target_no", studentNo);
-			request.setAttribute("student_name", "検索結果"); 
-		}
+            req.setAttribute("subject_tests", subjectTests);
+            req.setAttribute("selected_subject", subject);
 
-		// 4. 結果をセットしてJSPへ転送
-		request.setAttribute("scores", scores);
-		request.getRequestDispatcher("test_list.jsp").forward(request, response);
-	}
+        } else if (f5 != null && !f5.trim().isEmpty()) {
+            // 【学生検索】
+            Student student = stDao.get(f5.trim());
+            if (student != null) {
+                req.setAttribute("selected_student", student);
+                List<TestListStudent> studentTests = tlsStdDao.filter(student);
+                if (studentTests != null && !studentTests.isEmpty()) {
+                    req.setAttribute("student_tests", studentTests);
+                }
+            } else {
+                req.setAttribute("student_not_found", "学生情報が存在しませんでした");
+            }
+        }
+
+        // JSPへ
+        req.setAttribute("ent_year_set", entYearSet);
+        req.setAttribute("class_num_set", classNumSet);
+        req.setAttribute("subjects", subjects);
+        req.setAttribute("f1", f1Str);
+        req.setAttribute("f2", f2);
+        req.setAttribute("f3", f3);
+        req.setAttribute("f5", f5);
+
+        req.getRequestDispatcher("test_list.jsp").forward(req, res);
+    }
 }

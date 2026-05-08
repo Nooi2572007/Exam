@@ -31,8 +31,8 @@ public class TestListSubjectDao extends Dao {
 				testsubject.setClassNum(rSet.getString("class_num"));
 				testsubject.setStudentNo(rSet.getString("student_no"));
 				testsubject.setStudentName(rSet.getString("student_name"));
-				Map<Integer, Integer> pointMap = testsubject.getPoints();
-				pointMap.put(rSet.getInt("no"), rSet.getInt("point"));
+				Map<String, Integer> pointMap = testsubject.getPoints();
+				pointMap.put(String.valueOf(rSet.getInt("no")), rSet.getInt("point"));
 				
 				// リストに追加
 				list.add(testsubject);
