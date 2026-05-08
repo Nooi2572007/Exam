@@ -96,7 +96,7 @@
                         </tbody>
                     </table>
                 </c:if>
-
+                
                 <%-- B. 学生別一覧 --%>
                 <c:if test="${not empty selected_student}">
                     <%-- Studentクラスのメソッド名に合わせて修正済み --%>
