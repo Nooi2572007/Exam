@@ -91,7 +91,6 @@
                                     <%-- Map(points)からキー1と2で取得。出ない場合は '1' とシングルクォートを試してください --%>
                                     <td>${ts.points['1'] != null ? ts.points['1'] : "-"}</td>
                                     <td>${ts.points['2'] != null ? ts.points['2'] : "-"}</td>
-                                    
                                 </tr>
                             </c:forEach>
                         </tbody>
