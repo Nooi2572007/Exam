@@ -6,32 +6,36 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import bean.Student;
-import bean.TestListStudent;
+import bean.School;
+import bean.Subject;
+import bean.TestListSubject;
 
-public class TestListStudentDao extends Dao {
+public class TestListSubjectDao extends Dao {
 	
 	private String baseSql = "select * from test";
 	
-	private List<TestListStudent> postFilter(ResultSet rSet) throws Exception {
+	private List<TestListSubject> postFilter(ResultSet rSet) throws Exception {
 		// リストを初期化
-		List<TestListStudent> list = new ArrayList<>();
+		List<TestListSubject> list = new ArrayList<>();
 		
 		
 		try {
 			// リザルトセットを全権走査
 			while (rSet.next()) {
 				// 学生インスタンスを初期化
-				TestListStudent teststudent = new TestListStudent();
+				TestListSubject testsubject = new TestListSubject();
 				// 学生インスタンスに検索結果をセット
-				teststudent.setSubjectName(rSet.getString("subject_name"));
-				teststudent.setSubjectCd(rSet.getString("subject_cd"));
-				teststudent.setNum(rSet.getInt("no"));
-				teststudent.setPoint(rSet.getInt("point"));
+				testsubject.setEntYear(rSet.getInt("ent_year"));
+				testsubject.setClassNum(rSet.getString("class_num"));
+				testsubject.setStudentNo(rSet.getString("student_no"));
+				testsubject.setStudentName(rSet.getString("student_name"));
+				Map<Integer, Integer> pointMap = testsubject.getPoints();
+				pointMap.put(rSet.getInt("no"), rSet.getInt("point"));
 				
 				// リストに追加
-				list.add(teststudent);
+				list.add(testsubject);
 			}
 		} catch (SQLException | NullPointerException e) {
 			e.printStackTrace();
@@ -40,10 +44,10 @@ public class TestListStudentDao extends Dao {
 		return list;
 	}
 	
-	public List<TestListStudent> filter(Student student) throws Exception {
+	public List<TestListSubject> filter(int entYear, String classNum, Subject subject, School school) throws Exception {
 
 		// リストを初期化
-		List<TestListStudent> list = new ArrayList<>();
+		List<TestListSubject> list = new ArrayList<>();
 		// コネクションを確立
 		Connection connection = getConnection();
 		// プリペアードステートメント
@@ -51,16 +55,20 @@ public class TestListStudentDao extends Dao {
 		// リザルトセット
 		ResultSet resultSet = null;
 		// SQL文の条件
-		String join = " join subject on test.subject_cd = subject.subject_cd";
-	    String condition = " where student_no = ?";
+		String join = " join student on test.student_no = student.student_no";
+	    String condition = " where test.school_cd = ? and student.ent_year = ? "
+	                     + "and test.class_num = ? and test.subject_cd = ?";
 		// SQL文のソート
-		String order = " order by subject_cd asc";
+		String order = " order by student_no asc";
 		
 		try {
 			// プリペアードステートメントにSQL文をセット
-			statement = connection.prepareStatement(baseSql + join +  condition + order);
+			statement = connection.prepareStatement(baseSql + join + condition + order);
 			// プリペアードステートメントに学校コードをバインド
-			statement.setString(1, student.getStudentNo());
+			statement.setString(1, school.getSchoolCd());
+			statement.setInt(2, entYear);
+			statement.setString(3, classNum);
+			statement.setString(4, subject.getCd());
 			// プリペアードステートメントを実行
 			resultSet = statement.executeQuery();
 			// リストへの格納処理を実行
