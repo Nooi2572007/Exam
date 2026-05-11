@@ -1,9 +1,6 @@
 
 package scoremanager.main;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import bean.Student;
 import bean.Teacher;
 import dao.StudentDao;
@@ -20,7 +17,6 @@ public class StudentUpdateExecuteAction extends Action {
 		// ローカル変数の指定 1
 		HttpSession session = req.getSession(); // セッション
 		Teacher teacher = (Teacher)session.getAttribute("user");
-		int ent_year = 0; // 選択された入学年度
 		String student_no = ""; // 入力された学生番号
 		String student_name = ""; // 入力された氏名
 		String class_num = ""; // 選択されたクラス番号
@@ -28,12 +24,9 @@ public class StudentUpdateExecuteAction extends Action {
 		Boolean IsAttend = false;
 		Student student = new Student();
 		StudentDao studentDao = new StudentDao();
-		Map<String, String> errors = new HashMap<>(); // エラーメッセージ
 
 		// リクエストパラメーターの取得 2
-		ent_year = Integer.parseInt(req.getParameter("ent_year"));
 		student_no = req.getParameter("no");
-
 		student_name = req.getParameter("name");
 		class_num = req.getParameter("class_num");
 		isAttend = req.getParameter("is_attend");
