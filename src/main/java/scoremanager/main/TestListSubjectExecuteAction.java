@@ -38,7 +38,7 @@ public class TestListSubjectExecuteAction extends Action {
         if (f1 != 0 && f2 != null && !f2.equals("0") && f3 != null && !f3.equals("0")) {
             Subject subject = sDao.get(f3, school);
             List<TestListSubject> tsList = tlsSubDao.filter(f1, f2, subject, school);
-            
+
             // 学生ごとに回数別点数をマージ
             Map<String, TestListSubject> mergeMap = new LinkedHashMap<>();
             if (tsList != null) {
@@ -53,6 +53,14 @@ public class TestListSubjectExecuteAction extends Action {
             }
             req.setAttribute("subject_tests", new ArrayList<>(mergeMap.values()));
             req.setAttribute("selected_subject", subject);
+
+            // 画像② 検索条件はOKだが結果が0件の場合
+            if (mergeMap.isEmpty()) {
+                req.setAttribute("subject_no_result", "学生情報が存在しませんでした");
+            }
+        } else {
+            // 画像① 3条件のいずれかが未選択の場合
+            req.setAttribute("subject_error", "入学年度とクラスと科目を選択してください");
         }
 
         // ドロップダウンと選択値の維持
