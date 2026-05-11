@@ -53,12 +53,9 @@
                         <div class="col-auto text-secondary small" style="width:100px;">学生情報</div>
                         
                         <div class="col-6">
-<<<<<<< HEAD
+                        	<div class="col-auto small">学生番号</div>
                             <input type="text" name="f5" class="form-control form-control-sm" value="${f5}" placeholder="学生番号を入力してください" required>
-=======
-                        <div class="col-auto small">学生番号</div>
-                            <input type="text" name="f5" class="form-control" placeholder="学生番号を入力してください" required>
->>>>>>> branch 'master' of https://github.com/Nooi2572007/Exam.git
+                        
                         </div>
                         <div class="col-2">
                             <button class="btn btn-secondary btn-sm w-50">検索</button>
