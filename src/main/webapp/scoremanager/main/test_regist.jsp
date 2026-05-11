@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:import url="/common/base.jsp">
-    <c:param name="title">成績管理システム</c:param>
+	<c:param name="title">
+		得点管理システム
+	</c:param>
     <c:param name="content">
-        <section class="p-4">
-            <h2 class="h3 mb-3 border-bottom pb-2">成績登録</h2>
+        <section class="me=4">
+            <h2 class="h3 mb-3 bg-secondary bg-opacity-10 py-2 px-4">成績管理</h2>
             
             <%-- 検索条件指定フォーム --%>
             <form action="TestRegist.action" method="get">
-                <div class="row g-3 mb-3">
+                <div class="row border mx-3 mb-3 py-2 align-items-center rounded" id="filter">
                     <div class="col-md-3">
                         <label class="form-label">入学年度</label>
                         <select name="f1" class="form-select">
@@ -39,13 +41,14 @@
                     <div class="col-md-2">
                         <label class="form-label">回数</label>
                         <select name="f4" class="form-select">
+                        <option value="0">--------</option>
                             <c:forEach var="i" begin="1" end="10">
                                 <option value="${i}" <c:if test="${i == f4}">selected</c:if>>${i}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-secondary w-100">検索</button>
+                        <button type="submit" class="btn btn-secondary">検索</button>
                     </div>
                 </div>
             </form>
@@ -83,7 +86,7 @@
                                             <%-- 点数入力欄。未入力(0未満)の場合は空欄にする --%>
                                             <input type="number" name="point_set[]" 
                                                    value="${test.point >= 0 ? test.point : ''}" 
-                                                   class="form-control" min="0" max="100">
+                                                   class="" min="0" max="100">
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -103,7 +106,7 @@
             
             <%-- 検索結果が空の場合のメッセージ --%>
             <c:if test="${empty tests && !empty f1}">
-                <p class="text-danger mt-3">学生の情報が見つかりませんでした。</p>
+                <p class="mt-3">学生の情報が見つかりませんでした。</p>
             </c:if>
         </section>
     </c:param>
