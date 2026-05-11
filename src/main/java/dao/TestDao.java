@@ -14,7 +14,6 @@ import bean.Test;
 
 public class TestDao extends Dao {
 	
-//	private String baseSql = "select test.*, student.student_name, student.ent_year";
 	private String baseSql = "select student.student_no, student.student_name, student.ent_year, student.class_num, test.no, test.point, test.subject_cd";
 	
 	public List<Integer> filterEntYear(School school) throws Exception {
@@ -116,18 +115,10 @@ public class TestDao extends Dao {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
-//		String join = " from student left join test on test.student_no = student.student_no";
-//	    String condition = " where test.school_cd = ? and student.ent_year = ? "
-//	                     + "and test.class_num = ? and test.subject_cd = ? and test.no = ?";
 		String order = " order by student_no asc";
-//		String join = " from student left join test on student.student_no = test.student_no "
-//	             + "and test.subject_cd = ? and test.no = ? ";
 		String join = " from student left join test on student.student_no = test.student_no "
 	             + "and test.subject_cd = ? and test.no = ? and test.school_cd = student.school_cd ";
 		String condition = " where student.school_cd = ? and student.ent_year = ? and student.class_num = ? ";
-
-	// ...中略...
-
 	
 		try {
 			statement = connection.prepareStatement(baseSql + join + condition + order);

@@ -55,7 +55,7 @@
                         
                         <div class="col-6">
                         <div class="col-auto small">学生番号</div>
-                            <input type="text" name="f5" class="form-control" placeholder="学生番号を入力してください">
+                            <input type="text" name="f5" class="form-control" placeholder="学生番号を入力してください" required>
                         </div>
                         <div class="col-2">
                             <button class="btn btn-secondary btn-sm w-50">検索</button>

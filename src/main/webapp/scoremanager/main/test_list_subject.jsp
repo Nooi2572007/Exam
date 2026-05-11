@@ -45,7 +45,7 @@
                     </div>
                     <%-- 画像① 条件不足エラー --%>
                     <c:if test="${not empty subject_error}">
-                        <div class="text-danger small mt-2" style="padding-left:100px;">${subject_error}</div>
+                        <div class="text-warning small mt-2" style="padding-left:10px;">${subject_error}</div>
                     </c:if>
                 </form>
 
@@ -58,7 +58,7 @@
                         
                         <div class="col-6">
                         <div class="col-auto small">学生番号</div>
-                            <input type="text" name="f5" class="form-control" placeholder="学生番号を入力してください">
+                            <input type="text" name="f5" class="form-control" placeholder="学生番号を入力してください" required>
                         </div>
                         <div class="col-2">
                             <button class="btn btn-secondary btn-sm w-50">検索</button>
@@ -73,7 +73,7 @@
             </c:if>
 
             <div class="mx-3 mt-4">
-                <c:if test="${not empty selected_subject}">
+                <c:if test="${empty subject_no_result}">
                     <div>科目：${selected_subject.name}</div>
                     <table class="table table-hover">
                         <thead>

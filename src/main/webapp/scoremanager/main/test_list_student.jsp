@@ -54,7 +54,7 @@
                         
                         <div class="col-6">
                         <div class="col-auto small">学生番号</div>
-                            <input type="text" name="f5" class="form-control" placeholder="学生番号を入力してください">
+                            <input type="text" name="f5" class="form-control" placeholder="学生番号を入力してください" required>
                         </div>
                         <div class="col-2">
                             <button class="btn btn-secondary btn-sm w-50">検索</button>
@@ -66,19 +66,21 @@
             <div class="mx-3 mt-4">
                 <c:if test="${not empty selected_student}">
                     <div>氏名：${selected_student.studentName} (${selected_student.studentNo})</div>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr class="border-bottom"><th>科目名</th><th>科目コード</th><th>回数</th><th>点数</th></tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="ts" items="${student_tests}">
-                                <tr><td>${ts.subjectName}</td><td>${ts.subjectCd}</td><td>${ts.num}</td><td>${ts.point}</td></tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                    <c:if test="${empty student_not_found }">
+	                    <table class="table table-hover">
+	                        <thead>
+	                            <tr class="border-bottom"><th>科目名</th><th>科目コード</th><th>回数</th><th>点数</th></tr>
+	                        </thead>
+	                        <tbody>
+	                            <c:forEach var="ts" items="${student_tests}">
+	                                <tr><td>${ts.subjectName}</td><td>${ts.subjectCd}</td><td>${ts.num}</td><td>${ts.point}</td></tr>
+	                            </c:forEach>
+	                        </tbody>
+	                    </table>
+                    </c:if>
                 </c:if>
                 <c:if test="${not empty student_not_found}">
-                    <div class="text-danger small">${student_not_found}</div>
+                    <div class="small">${student_not_found}</div>
                 </c:if>
             </div>
         </section>
