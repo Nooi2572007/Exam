@@ -5,7 +5,8 @@
 
     <c:param name="content">
         <section class="me-4">
-            <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2 px-4">成績参照</h2>
+            <h2 class="h3 mb-3 bg-secondary bg-opacity-10 py-2 px-4">成績参照</h2>
+            
 
             <div class="border mx-3 mb-3 p-3 rounded">
                 <%-- 科目検索フォーム --%>
@@ -40,7 +41,7 @@
                             </select>
                         </div>
                         <div class="col-2">
-                            <button class="btn btn-secondary btn-sm w-100">検索</button>
+                            <button class="btn btn-secondary btn-sm w-50">検索</button>
                         </div>
                     </div>
                 </form>
@@ -51,18 +52,19 @@
                 <form method="get" action="TestListStudentExecute.action">
                     <div class="row align-items-center">
                         <div class="col-auto text-secondary small" style="width:100px;">学生情報</div>
-                        <div class="col-auto small">学生番号</div>
+                        
                         <div class="col-6">
-                            <input type="text" name="f5" class="form-control form-control-sm" placeholder="学生番号を入力してください">
+                        <div class="col-auto small">学生番号</div>
+                            <input type="text" name="f5" class="form-control" placeholder="学生番号を入力してください" required>
                         </div>
                         <div class="col-2">
-                            <button class="btn btn-secondary btn-sm w-100">検索</button>
+                            <button class="btn btn-secondary btn-sm w-50">検索</button>
                         </div>
                     </div>
                 </form>
             </div>
 
-            <div class="mx-3 mt-4 text-info small">
+            <div class="text-info small">
                 科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
             </div>
         </section>

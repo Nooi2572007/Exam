@@ -32,12 +32,17 @@ public class TestListStudentExecuteAction extends Action {
         // 学生検索実行
         if (f5 != null && !f5.trim().isEmpty()) {
             Student student = stDao.get(f5.trim());
-            if (student != null) {
-                req.setAttribute("selected_student", student);
-                List<TestListStudent> studentTests = tlsStdDao.filter(student);
-                req.setAttribute("student_tests", studentTests);
+            req.setAttribute("selected_student", student);
+            
+            if (student == null) {
+            	req.setAttribute("student_not_found", "学生情報が存在しませんでした");
             } else {
-                req.setAttribute("student_not_found", "学生情報が存在しませんでした");
+            	List<TestListStudent> studentTests = tlsStdDao.filter(student);
+            	if (studentTests != null && !studentTests.isEmpty()) {
+            		req.setAttribute("student_tests", studentTests);
+            	} else {
+            		req.setAttribute("student_not_found", "成績情報が存在しませんでした");
+            	}
             }
         }
 

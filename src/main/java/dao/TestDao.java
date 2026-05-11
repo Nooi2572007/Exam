@@ -14,7 +14,7 @@ import bean.Test;
 
 public class TestDao extends Dao {
 	
-	private String baseSql = "select test.*, student.student_name, student.ent_year";
+	private String baseSql = "select student.student_no, student.student_name, student.ent_year, student.class_num, test.no, test.point, test.subject_cd";
 	
 	public List<Integer> filterEntYear(School school) throws Exception {
 	    List<Integer> list = new ArrayList<>();
@@ -92,7 +92,13 @@ public class TestDao extends Dao {
 	            
 	            test.setSchool(school);
 	            test.setNo(rSet.getInt("no"));
-	            test.setPoint(rSet.getInt("point"));
+//	            test.setPoint(rSet.getInt("point"));
+	            Object pointObj = rSet.getObject("point");
+	            if (pointObj == null) {
+	                test.setPoint(-1); // 未登録の場合は-1をセット
+	            } else {
+	                test.setPoint(rSet.getInt("point")); // 登録済みの場合はそのまま
+	            }
 	            test.setClassNum(rSet.getString("class_num"));
 	            
 	            list.add(test);
@@ -109,20 +115,20 @@ public class TestDao extends Dao {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
-		String join = " from test join student on test.student_no = student.student_no";
-	    String condition = " where test.school_cd = ? and student.ent_year = ? "
-	                     + "and test.class_num = ? and test.subject_cd = ? and test.no = ?";
 		String order = " order by student_no asc";
-		
+		String join = " from student left join test on student.student_no = test.student_no "
+	             + "and test.subject_cd = ? and test.no = ? and test.school_cd = student.school_cd ";
+		String condition = " where student.school_cd = ? and student.ent_year = ? and student.class_num = ? ";
+	
 		try {
 			statement = connection.prepareStatement(baseSql + join + condition + order);
-			statement.setString(1, school.getSchoolCd());
-			statement.setInt(2, entYear);
-			statement.setString(3, classNum);
-			statement.setString(4, subject.getCd());
-			statement.setInt(5, num);
-			
+			statement.setString(1, subject.getCd()); // ONの1つ目
+			statement.setInt(2, num);                // ONの2つ目
+			statement.setString(3, school.getSchoolCd()); // WHEREの1つ目
+			statement.setInt(4, entYear);                 // WHEREの2つ目
+			statement.setString(5, classNum);
 			resultSet = statement.executeQuery();
+			
 			list = postFilter(resultSet, school);
 		} catch (Exception e) {
 			throw e;
