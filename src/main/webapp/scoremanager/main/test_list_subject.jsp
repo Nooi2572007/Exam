@@ -43,6 +43,10 @@
                             <button class="btn btn-secondary btn-sm w-50">検索</button>
                         </div>
                     </div>
+                    <%-- 画像① 条件不足エラー --%>
+                    <c:if test="${not empty subject_error}">
+                        <div class="text-danger small mt-2" style="padding-left:100px;">${subject_error}</div>
+                    </c:if>
                 </form>
 
                 <hr>
@@ -62,6 +66,11 @@
                     </div>
                 </form>
             </div>
+
+            <%-- 画像② 検索条件はOKだが結果0件 --%>
+            <c:if test="${not empty subject_no_result}">
+                <div class="mx-3 small">${subject_no_result}</div>
+            </c:if>
 
             <div class="mx-3 mt-4">
                 <c:if test="${not empty selected_subject}">
