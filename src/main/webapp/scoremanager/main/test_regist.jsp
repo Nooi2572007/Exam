@@ -69,6 +69,7 @@
                                     <th>学生番号</th>
                                     <th>氏名</th>
                                     <th>点数</th>
+                                    <th>削除</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,6 +89,8 @@
                                                    value="${test.point >= 0 ? test.point : ''}" 
                                                    class="" min="0" max="100">
                                         </td>
+                                        <td><a href="TestDelete.action?student_no=${test.student.studentNo}&cd=${f3}&num=${f4}">削除</a></td>
+                                        
                                     </tr>
                                 </c:forEach>
                             </tbody>

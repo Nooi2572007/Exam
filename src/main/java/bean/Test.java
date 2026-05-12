@@ -10,7 +10,7 @@ public class Test implements Serializable {
     private int point;
     private String classNum;
 
-    // ゲッター・セッター（Actionの赤線に合わせて名前を修正）
+    // ゲッター・セッター
     public Student getStudent() { return student; }
     public void setStudent(Student student) { this.student = student; }
 
