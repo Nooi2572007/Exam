@@ -1,6 +1,8 @@
 package scoremanager.main;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bean.School;
 import bean.Subject;
@@ -20,6 +22,7 @@ public class TestRegistAction extends Action {
 		HttpSession session = req.getSession();
 		Teacher teacher = (Teacher) session.getAttribute("user");
 		School school = teacher.getSchool();
+		Map<String, String> errors = new HashMap<>();
 
 		// 画面からの入力値を取得
 		String entYearStr = req.getParameter("f1"); // 入学年度
@@ -32,29 +35,34 @@ public class TestRegistAction extends Action {
 
 		// --- 検索処理 ---
 		// 必要な項目がすべて入力されていたら検索を実行
-		if (entYearStr != null && classNum != null && subjectCd != null && numStr != null 
-				&& !entYearStr.equals("0") && !subjectCd.equals("0")) {
+		if (entYearStr != null) {
+		    
+		    // 2. 検索ボタンは押されたけど、未選択の項目がある場合
+		    if (entYearStr.equals("0") || classNum.equals("0") || subjectCd.equals("0") || numStr.equals("0")) {
+		        errors.put("1", "入学年度とクラスと科目と回数を選択してください");
+		        req.setAttribute("errors", errors);
+		    } else {
+		    	int entYear = Integer.parseInt(entYearStr);
+				int num = Integer.parseInt(numStr);
 
-			int entYear = Integer.parseInt(entYearStr);
-			int num = Integer.parseInt(numStr);
+				// 1. まず科目コードから Subject オブジェクトを取得（DAOの定義に合わせるため）
+				Subject subject = sDao.get(subjectCd, school);
 
-			// 1. まず科目コードから Subject オブジェクトを取得（DAOの定義に合わせるため）
-			Subject subject = sDao.get(subjectCd, school);
+				// 2. 引数の3番目に「subjectCd」ではなく「subject」を渡す（これで赤線が消えます）
+				List<Test> tests = tDao.filter(entYear, classNum, subject, num, school);
 
-			// 2. 引数の3番目に「subjectCd」ではなく「subject」を渡す（これで赤線が消えます）
-			List<Test> tests = tDao.filter(entYear, classNum, subject, num, school);
+				// JSPに渡すデータをセット
+				req.setAttribute("tests", tests);
+				req.setAttribute("subject", subject);
+				req.setAttribute("num", num);
+				req.setAttribute("class_num", classNum);
 
-			// JSPに渡すデータをセット
-			req.setAttribute("tests", tests);
-			req.setAttribute("subject", subject);
-			req.setAttribute("num", num);
-			req.setAttribute("class_num", classNum);
-
-			// 現在の選択状態を維持するためにセット
-			req.setAttribute("f1", entYear);
-			req.setAttribute("f2", classNum);
-			req.setAttribute("f3", subjectCd);
-			req.setAttribute("f4", num);
+				// 現在の選択状態を維持するためにセット
+				req.setAttribute("f1", entYear);
+				req.setAttribute("f2", classNum);
+				req.setAttribute("f3", subjectCd);
+				req.setAttribute("f4", num);
+		    }
 		}
 
 		// --- 画面表示の準備（ドロップダウン用） ---

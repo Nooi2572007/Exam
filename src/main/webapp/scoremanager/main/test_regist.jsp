@@ -52,7 +52,10 @@
                     </div>
                 </div>
             </form>
-
+            
+            <c:if test="${not empty errors.get('1')}">
+                <div class="text-warning small mt-2" style="padding-left:10px;">${errors.get("1")}</div>
+            </c:if>
             <%-- 検索結果がある場合のみ表示 --%>
             <c:if test="${!empty tests}">
                 <div class="mt-4">
